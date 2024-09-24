@@ -40,17 +40,30 @@
     }
 
     function submit(stepModels) {
-      if (stepModels.keypair) {
+      if (stepModels.sshOption === 'existing' && stepModels.keypair) {
         stepModels.ssh_keys = [stepModels.keypair.trim()];
         delete stepModels.keypair;
       }
-      if (stepModels.network) {
-        stepModels.nics = [{network: stepModels.network}];
-        delete stepModels.network;
+    
+      if (stepModels.sshOption === 'upload' && stepModels.uploadedKeyFile) {
+        stepModels.ssh_keys = [stepModels.uploadedKeyFile];  
+        delete stepModels.uploadedKeyFile;
       }
 
+      if (stepModels.sshOption === 'none') {
+        delete stepModels.ssh_keys;
+      }
+    
+      if (stepModels.network) {
+        stepModels.nics = [{ network: stepModels.network }];
+        delete stepModels.network;
+      }
+      
+      delete stepModels.sshOption;
+      
       return Promise.resolve(stepModels);
     }
+
 
     function onGetImages(response) {
       model.images = response.data.items;

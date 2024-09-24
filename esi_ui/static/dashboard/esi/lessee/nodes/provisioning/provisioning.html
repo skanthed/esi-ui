@@ -40,20 +40,49 @@
 </div>
 
 <div class="form-group">
+  <label class="control-label" translate>SSH Key Options</label>
+  <div class="form-inline">
+    <label class="radio-inline">
+      <input type="radio" ng-model="stepModels.sshOption" value="existing" required> Use Existing SSH Key
+    </label>
+    <label class="radio-inline">
+      <input type="radio" ng-model="stepModels.sshOption" value="upload" required> Upload New SSH Key
+    </label>
+    <label class="radio-inline">
+      <input type="radio" ng-model="stepModels.sshOption" value="none" required> Do Not Use SSH Key
+    </label>
+  </div>
+</div>
+
+<div class="form-group" ng-show="stepModels.sshOption === 'existing'">
   <label class="control-label" translate for="keypair_name">SSH Keys</label>
+  
   <div class="horizon-loading-bar" ng-if="!model.loaded.keypairs">
     <div class="progress progress-striped active">
       <div class="progress-bar"></div>
     </div>
   </div>
+
   <div class="alert alert-warning"
       ng-if="model.loaded.keypairs && model.keypairs.length === 0"
       translate>There are no keypairs</div>
+  
   <select id="keypair_name"
           class="form-control"
           ng-if="model.loaded.keypairs && model.keypairs.length !== 0"
           ng-options="keypair.keypair.public_key as keypair.keypair.name for keypair in model.keypairs"
+          ng-required="stepModels.sshOption === 'existing'"
           ng-model="stepModels.keypair">
     <option value=""></option>
   </select>
+</div>
+
+<div class="form-group"
+     ng-show="stepModels.sshOption === 'upload'">
+  <label class="control-label" translate>Upload New SSH Key</label>
+  <input type="file"
+         class="form-control"
+         ng-required="stepModels.sshOption === 'upload'"
+         onchange="angular.element(this).scope().uploadSSHKey($event)"
+         ng-model="stepModels.uploadedKey">
 </div>

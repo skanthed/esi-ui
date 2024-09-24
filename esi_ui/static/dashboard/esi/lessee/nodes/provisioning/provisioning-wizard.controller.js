@@ -17,6 +17,12 @@
     $scope.submit = $scope.model.submit;
 
     $scope.model.initialize();
+    $scope.uploadSSHKey = function(event) {
+      var file = event.target.files[0];
+      if (file) {
+        $scope.stepModels.uploadedKeyFile = file;
+      }
+    };
   }
 
 })();
